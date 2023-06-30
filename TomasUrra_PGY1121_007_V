@@ -1,0 +1,99 @@
+import os
+import numpy as np
+
+#profe si ve esto ojala quqe este bueno, estuve hasta las 5 am programando y creo que se pudo jajajaj
+
+# Limpiar la consola
+def clear_console():
+    os.system('cls' if os.name == 'nt' else 'clear')
+
+# Definir las estructuras de datos
+clientela_residencial = np.zeros((4, 5), dtype=int)
+lotes = [
+    {"número": 1, "tamaño": "5000 m²", "precio": "$15.000.000"},
+    {"número": 2, "tamaño": "5000 m²", "precio": "$15.000.000"},
+    {"número": 3, "tamaño": "5000 m²", "precio": "$15.000.000"},
+    {"número": 4, "tamaño": "5000 m²", "precio": "$15.000.000"},
+    {"número": 5, "tamaño": "5000 m²", "precio": "$15.000.000"}
+]
+clientes = []
+
+# Función mostrar la disponibilidad de lotes
+def disponibilidad_lotes():
+    clear_console()
+    print("Estos son los Lotes Disponibles:")
+    disponibilidad = np.where(clientela_residencial == 0, "[ ]", "[X]")
+    print(disponibilidad)
+
+# Función seleccionar un lote
+def seleccionar_lote():
+    clear_console()
+    rut = input("Ingrese su RUT(con puntos y guión): ")
+    nombre = input("Ingrese su nombre completo: ")
+    telefono = input("Ingrese su número de teléfono: ")
+    email = input("Ingrese su correo electrónico ")
+    fila = int(input("Ingrese la fila del lote: "))
+    columna = int(input("Ingrese la columna del lote: "))
+
+    if fila < 0 or fila >= clientela_residencial.shape[0] or columna < 0 or columna >= clientela_residencial.shape[1]:
+        print("La fila o columna ingresada no es válida. Por favor, ingrese nuevamente!.")
+        return
+    if clientela_residencial[fila, columna] == 0:
+        clientela_residencial[fila, columna] = 1
+        lote_seleccionado = lotes[columna + fila * clientela_residencial.shape[1]]
+        clientes.append({"rut": rut, "nombre": nombre, "telefono": telefono, "email": email, "lote": lote_seleccionado})
+        print("Lote seleccionado correctamente, Muchas gracias!")
+    else:
+        print("El lote seleccionado no está disponible:( , Por favor intenta con otro.")
+
+# Función para ver los detalles del lote/lotes 
+def detalle_lote():
+    clear_console()
+    numero_lote = int(input("Ingrese el número de lote seleccionado: "))
+    lote_seleccionado = next((lote for lote in lotes if lote["numero"] == numero_lote), None)
+
+    if lote_seleccionado:
+        print("Detalles del lote seleccionado:")
+        print("Número de lote:", lote_seleccionado["numero"])
+        print("Tamaño del terreno:", lote_seleccionado["tamaño"])
+        print("Precio:", lote_seleccionado["precio"])
+    else:
+        print("Lote no encontrado.")
+
+# Función para ver lista de clientes
+def ver_clientes():
+    clear_console()
+    print("Clientes que han comprado un lote:")
+    for cliente in clientes:
+        print("RUT:", cliente["rut"])
+        print("Nombre:", cliente["nombre"])
+        print("Teléfono:", cliente["telefono"])
+        print("Email:", cliente["email"])
+        print("Lote seleccionado:", cliente["lote"])
+        print()
+
+# Bucle Menú principal
+while True:
+    print("------BIENVENIDO A LOTEOSDUOC------")
+    print("1.-Ver Disponibilidad de lotes")
+    print("2.-Seleccionar un lote")
+    print("3.-Ver detalles del lote seleccionado")
+    print("4.-Ver Clientes")
+    print("5.-Salir")
+
+    opcion = input("Ingrese la opción deseada: ")
+
+    if opcion == "1":
+        disponibilidad_lotes()
+    elif opcion == "2":
+        seleccionar_lote()
+    elif opcion == "3":
+        detalle_lote()
+    elif opcion == "4":
+        ver_clientes()
+    elif opcion == "5":
+        print("Gracias por preferir LOTEOSDUOC , hasta luego! :)")
+        break
+    else:
+        print("Opción inválida. Por favor, intenta nuevamente :).")
+
